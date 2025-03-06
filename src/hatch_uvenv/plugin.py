@@ -209,6 +209,7 @@ class UVVirtualEnvironmentPlugin(EnvironmentInterface):
         add_verbosity_flag(command, self.verbosity, adjustment=-1)
         self.add_group_flags(command)
         self.add_extra_flags(command)
+        self.add_uv_flags(command)
         command.extend(args)
 
         return command
