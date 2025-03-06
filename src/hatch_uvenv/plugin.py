@@ -176,11 +176,9 @@ class UVVirtualEnvironmentPlugin(EnvironmentInterface):
     def exists(self):
         return self.virtual_env.exists()
 
-    def install_project(self):
-        ...
+    def install_project(self): ...
 
-    def install_project_dev_mode(self):
-        ...
+    def install_project_dev_mode(self): ...
 
     def dependencies_in_sync(self):
         return False
