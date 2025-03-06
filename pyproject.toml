@@ -1,0 +1,41 @@
+[build-system]
+requires = ["hatchling", "hatch-vcs"]
+build-backend = "hatchling.build"
+
+[project]
+name = "hatch-uvenv"
+description = ""
+readme = "README.md"
+license = { file = "LICENSE" }
+dynamic = ["version"]
+authors = [
+    { name = "Daniel Copley", email = "djcopley@proton.me" },
+]
+requires-python = ">=3.9"
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Environment :: Console",
+    "Operating System :: MacOS",
+    "Operating System :: POSIX :: Linux",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+]
+dependencies = [
+    "hatch",
+]
+
+[project.entry-points.hatch]
+uvenv = "hatch_uvenv.hooks"
+
+[project.urls]
+Homepage = "https://github.com/djcopley/hatch-uvenv"
+Repository = "https://github.com/djcopley/hatch-uvenv.git"
+Issues = "https://github.com/djcopley/hatch-uvenv/issues"
+
+[tool.hatch.version]
+source = "vcs"
