@@ -163,6 +163,9 @@ class UVVirtualEnvironmentPlugin(EnvironmentInterface):
     def add_extra_flags(self, command):
         command.extend([f"--extra={feature}" for feature in self.features])
 
+    def add_uv_flags(self, command):
+        command.extend(self.config.get("uv-flags", []))
+
     def remove(self):
         self.virtual_env.remove()
         self.build_virtual_env.remove()
@@ -200,7 +203,7 @@ class UVVirtualEnvironmentPlugin(EnvironmentInterface):
             yield
 
     def construct_pip_install_command(self, args: list[str]):
-        command = ["uv", "sync", "--active", "--all-packages"]
+        command = ["uv", "sync", "--active"]
 
         # Default to -1 verbosity
         add_verbosity_flag(command, self.verbosity, adjustment=-1)
