@@ -44,6 +44,7 @@ class UVVirtualEnv:
             os.environ.get("HATCH_UV", "uv"),
             "venv",
             str(self.directory),
+            "--seed",  # seed virtual env with pip for compatibility `hatch.cli:ensure_environment_plugin_dependencies`
             "--python",
             python,
         ]
