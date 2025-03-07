@@ -184,6 +184,11 @@ class UVVirtualEnvironmentPlugin(EnvironmentInterface):
     def dependencies_in_sync(self):
         return False
 
+    def dependency_hash(self):
+        import time
+
+        return time.time().hex()
+
     def sync_dependencies(self):
         self.platform.check_command(self.construct_uv_sync_command())
 
