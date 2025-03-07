@@ -190,7 +190,8 @@ class UVVirtualEnvironmentPlugin(EnvironmentInterface):
         return time.time().hex()
 
     def sync_dependencies(self):
-        self.platform.check_command(self.construct_uv_sync_command())
+        with self.safe_activation():
+            self.platform.check_command(self.construct_uv_sync_command())
 
     @contextmanager
     def build_environment(self, dependencies):
