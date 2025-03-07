@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import os
 import sys
-import time
 from contextlib import contextmanager, suppress
 from functools import cached_property
 from os.path import isabs
@@ -14,8 +13,7 @@ from hatch.env.utils import add_verbosity_flag
 from hatch.utils.fs import Path
 from hatch.utils.shells import ShellManager
 from hatch.utils.structures import EnvVars
-
-from hatch_uvenv.venv import UVVirtualEnv
+from hatch.venv.core import UVVirtualEnv
 
 if TYPE_CHECKING:
     from collections.abc import Iterable
@@ -86,6 +84,9 @@ class UVVirtualEnvironmentPlugin(EnvironmentInterface):
     def explicit_uv_path(self) -> str:
         return self.get_env_var_option("uv_path") or self.config.get("uv-path", "")
 
+    def expose_uv(self):
+        return EnvVars({"HATCH_UV": self.uv_path})
+
     @cached_property
     def uv_path(self) -> str:
         if self.explicit_uv_path:
@@ -100,8 +101,8 @@ class UVVirtualEnvironmentPlugin(EnvironmentInterface):
             # Only if dependencies have been set by the user
             or is_default_environment(env_name, self.app.project.config.internal_envs[env_name])
         ):
-            uv_env = self.app.project.get_environment(env_name)
-            self.app.project.prepare_environment(uv_env)
+            uv_env = self.app.get_environment(env_name)
+            self.app.prepare_environment(uv_env)
             with uv_env:
                 return self.platform.modules.shutil.which("uv")
 
@@ -124,9 +125,6 @@ class UVVirtualEnvironmentPlugin(EnvironmentInterface):
             "python-sources": list,
             "uv-path": str,
         }
-
-    def expose_uv(self):
-        return EnvVars({"HATCH_UV": self.uv_path})
 
     def activate(self):
         self.virtual_env.activate()
@@ -186,23 +184,37 @@ class UVVirtualEnvironmentPlugin(EnvironmentInterface):
     def dependencies_in_sync(self):
         return False
 
-    def dependency_hash(self):
-        # always return a new value so uv can determine if dependencies are in-sync
-        return time.time().hex()
-
     def sync_dependencies(self):
-        with self.safe_activation():
-            if self.dev_mode:
-                self.platform.check_command(self.construct_pip_install_command([]))
-            else:
-                self.platform.check_command(self.construct_pip_install_command(["--no-editable"]))
+        self.platform.check_command(self.construct_uv_sync_command())
+
+    @contextmanager
+    def build_environment(self, dependencies):
+        from hatchling.dep.core import dependencies_in_sync
+        from packaging.requirements import Requirement
+
+        if not self.build_environment_exists():
+            with self.expose_uv():
+                self.build_virtual_env.create(self.parent_python)
+
+        with self.get_env_vars(), self.build_virtual_env:
+            if not dependencies_in_sync(
+                [Requirement(d) for d in dependencies],
+                sys_path=self.build_virtual_env.sys_path,
+                environment=self.build_virtual_env.environment,
+            ):
+                self.platform.check_command(self.construct_pip_install_command(dependencies))
+
+            yield
+
+    def build_environment_exists(self):
+        return self.build_virtual_env.exists()
 
     @contextmanager
     def command_context(self):
         with self.safe_activation():
             yield
 
-    def construct_pip_install_command(self, args: list[str]):
+    def construct_uv_sync_command(self):
         command = ["uv", "sync", "--active"]
 
         # Default to -1 verbosity
@@ -210,8 +222,16 @@ class UVVirtualEnvironmentPlugin(EnvironmentInterface):
         self.add_group_flags(command)
         self.add_extra_flags(command)
         self.add_uv_flags(command)
-        command.extend(args)
 
+        return command
+
+    def construct_pip_install_command(self, args: list[str]):
+        command = [self.uv_path, "pip", "install"]
+
+        # Default to -1 verbosity
+        add_verbosity_flag(command, self.verbosity, adjustment=-1)
+
+        command.extend(args)
         return command
 
     def enter_shell(self, name: str, path: str, args: Iterable[str]):
