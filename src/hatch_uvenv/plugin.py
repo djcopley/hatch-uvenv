@@ -221,7 +221,7 @@ class UVVirtualEnvironmentPlugin(EnvironmentInterface):
             yield
 
     def construct_uv_sync_command(self):
-        command = ["uv", "sync", "--active"]
+        command = ["uv", "sync", "--active", "--locked"]
 
         # Default to -1 verbosity
         add_verbosity_flag(command, self.verbosity, adjustment=-1)
