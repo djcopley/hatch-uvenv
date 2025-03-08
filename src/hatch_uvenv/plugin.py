@@ -78,8 +78,6 @@ class UVVirtualEnvironmentPlugin(EnvironmentInterface):
         )
         self.shells = ShellManager(self)
 
-        self._parent_python = None
-
     @cached_property
     def explicit_uv_path(self) -> str:
         return self.get_env_var_option("uv_path") or self.config.get("uv-path", "")
