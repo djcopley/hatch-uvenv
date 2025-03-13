@@ -5,6 +5,10 @@ This provides a plugin for [Hatch](https://github.com/pypa/hatch) that creates
 capabilities for fast, reproducible Python dependency management.
 
 [![Hatch project](https://img.shields.io/badge/%F0%9F%A5%9A-Hatch-4051b5.svg)](https://github.com/pypa/hatch)
+[![Lint](https://github.com/djcopley/hatch-uvenv/actions/workflows/lint.yml/badge.svg?branch=main)](https://github.com/djcopley/hatch-uvenv/actions/workflows/lint.yml)
+[![PyPI version](https://badge.fury.io/py/hatch-uvenv.svg)](https://badge.fury.io/py/hatch-uvenv)
+[![PyPI Supported Python Versions](https://img.shields.io/pypi/pyversions/hatch-uvenv.svg)](https://pypi.python.org/pypi/hatch-uvenv/)
+[![Downloads](https://static.pepy.tech/badge/hatch-uvenv)](https://pepy.tech/project/hatch-uvenv)
 
 **Table of Contents**
 
