@@ -163,3 +163,6 @@ demo/
 
 # Experimental scripts
 experiments/
+
+# Jujutsu VCS
+.jj/
