@@ -219,7 +219,11 @@ class UVVirtualEnvironmentPlugin(EnvironmentInterface):
             yield
 
     def construct_uv_sync_command(self):
-        command = [self.uv_path, "sync", "--active", "--locked"]
+        command = [self.uv_path, "sync", "--active"]
+
+        locked = self.config.get("locked", True)
+        if locked:
+            command.append("--locked")
 
         # Default to -1 verbosity
         add_verbosity_flag(command, self.verbosity, adjustment=-1)
