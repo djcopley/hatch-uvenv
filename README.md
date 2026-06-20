@@ -22,14 +22,14 @@ capabilities for fast, reproducible Python dependency management.
 
     ```toml
     [tool.hatch.env]
-    require = ["hatch-uvenv"]
+    requires = ["hatch-uvenv"]
     ```
 
 - ***hatch.toml***
 
     ```toml
     [env]
-    require = ["hatch-uvenv"]
+    requires = ["hatch-uvenv"]
     ```
 
 ## Configuration
