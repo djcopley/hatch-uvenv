@@ -24,7 +24,14 @@ classifiers = [
   "Programming Language :: Python :: 3.14",
   "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
 ]
-dependencies = ["hatch~=1.17"]
+# hatch~=1.17 already pulls these in, but the plugin imports them directly, so
+# declare them explicitly (lower bounds match hatch's own requirements).
+dependencies = [
+  "hatch~=1.17",
+  "packaging>=24.2",
+  "platformdirs>=2.5.0",
+  "python-discovery>=1.1",
+]
 
 [project.entry-points.hatch]
 uvenv = "hatch_uvenv.hooks"

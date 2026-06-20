@@ -20,7 +20,7 @@ if TYPE_CHECKING:
 
     from hatch.python.core import PythonManager
     from packaging.specifiers import SpecifierSet
-    from virtualenv.discovery.py_info import PythonInfo
+    from python_discovery import PythonInfo
 
 
 class UVVirtualEnvironmentPlugin(EnvironmentInterface):
@@ -193,7 +193,7 @@ class UVVirtualEnvironmentPlugin(EnvironmentInterface):
 
     @contextmanager
     def build_environment(self, dependencies):
-        from hatchling.dep.core import dependencies_in_sync  # noqa: PLC0415
+        from hatchling.cli.dep.core import dependencies_in_sync  # noqa: PLC0415
         from packaging.requirements import Requirement  # noqa: PLC0415
 
         if not self.build_environment_exists():
@@ -358,26 +358,12 @@ class UVVirtualEnvironmentPlugin(EnvironmentInterface):
         return None
 
     def _find_existing_interpreter(self, python_version: str = "") -> str | None:
-        from virtualenv.discovery import builtin as virtualenv_discovery  # noqa: PLC0415
+        import python_discovery  # noqa: PLC0415
 
-        propose_interpreters = virtualenv_discovery.propose_interpreters
-
-        def _patched_propose_interpreters(*args, **kwargs):
-            for interpreter, impl_must_match in propose_interpreters(*args, **kwargs):
-                if not self._interpreter_is_compatible(interpreter):
-                    continue
-
-                yield interpreter, impl_must_match
-
-        virtualenv_discovery.propose_interpreters = _patched_propose_interpreters
-        try:
-            python_info = virtualenv_discovery.get_interpreter(
-                python_version, (), env=self.get_interpreter_resolver_env()
-            )
-            if python_info is not None:
-                return python_info.executable
-        finally:
-            virtualenv_discovery.propose_interpreters = propose_interpreters
+        python_info = python_discovery.get_interpreter(
+            python_version, (), env=self.get_interpreter_resolver_env(), predicate=self._interpreter_is_compatible
+        )
+        return None if python_info is None else python_info.executable
 
     def _get_available_distribution(self, python_version: str = "") -> str | None:
         from hatch.python.resolve import get_compatible_distributions  # noqa: PLC0415

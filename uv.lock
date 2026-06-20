@@ -324,10 +324,18 @@ name = "hatch-uvenv"
 source = { editable = "." }
 dependencies = [
     { name = "hatch" },
+    { name = "packaging" },
+    { name = "platformdirs" },
+    { name = "python-discovery" },
 ]
 
 [package.metadata]
-requires-dist = [{ name = "hatch", specifier = "~=1.17" }]
+requires-dist = [
+    { name = "hatch", specifier = "~=1.17" },
+    { name = "packaging", specifier = ">=24.2" },
+    { name = "platformdirs", specifier = ">=2.5.0" },
+    { name = "python-discovery", specifier = ">=1.1" },
+]
 
 [[package]]
 name = "hatchling"
