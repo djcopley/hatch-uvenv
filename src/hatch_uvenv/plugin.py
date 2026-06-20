@@ -90,7 +90,7 @@ class UVVirtualEnvironmentPlugin(EnvironmentInterface):
         if self.explicit_uv_path:
             return self.explicit_uv_path
 
-        from hatch.env.internal import is_default_environment
+        from hatch.env.internal import is_default_environment  # noqa: PLC0415
 
         env_name = "hatch-uv"
         if not (
@@ -104,7 +104,7 @@ class UVVirtualEnvironmentPlugin(EnvironmentInterface):
             with uv_env:
                 return self.platform.modules.shutil.which("uv")
 
-        import sysconfig
+        import sysconfig  # noqa: PLC0415
 
         scripts_dir = sysconfig.get_path("scripts")
         old_path = os.environ.get("PATH", os.defpath)
@@ -183,7 +183,7 @@ class UVVirtualEnvironmentPlugin(EnvironmentInterface):
         return False
 
     def dependency_hash(self):
-        import time
+        import time  # noqa: PLC0415
 
         return time.time().hex()
 
@@ -193,8 +193,8 @@ class UVVirtualEnvironmentPlugin(EnvironmentInterface):
 
     @contextmanager
     def build_environment(self, dependencies):
-        from hatchling.dep.core import dependencies_in_sync
-        from packaging.requirements import Requirement
+        from hatchling.dep.core import dependencies_in_sync  # noqa: PLC0415
+        from packaging.requirements import Requirement  # noqa: PLC0415
 
         if not self.build_environment_exists():
             with self.expose_uv():
@@ -286,7 +286,7 @@ class UVVirtualEnvironmentPlugin(EnvironmentInterface):
 
     @cached_property
     def python_manager(self) -> PythonManager:
-        from hatch.python.core import PythonManager
+        from hatch.python.core import PythonManager  # noqa: PLC0415
 
         return PythonManager(self.isolated_data_directory / ".pythons")
 
@@ -358,7 +358,7 @@ class UVVirtualEnvironmentPlugin(EnvironmentInterface):
         return None
 
     def _find_existing_interpreter(self, python_version: str = "") -> str | None:
-        from virtualenv.discovery import builtin as virtualenv_discovery
+        from virtualenv.discovery import builtin as virtualenv_discovery  # noqa: PLC0415
 
         propose_interpreters = virtualenv_discovery.propose_interpreters
 
@@ -380,7 +380,7 @@ class UVVirtualEnvironmentPlugin(EnvironmentInterface):
             virtualenv_discovery.propose_interpreters = propose_interpreters
 
     def _get_available_distribution(self, python_version: str = "") -> str | None:
-        from hatch.python.resolve import get_compatible_distributions
+        from hatch.python.resolve import get_compatible_distributions  # noqa: PLC0415
 
         compatible_distributions = get_compatible_distributions()
         for installed_distribution in self.python_manager.get_installed():
@@ -423,7 +423,7 @@ class UVVirtualEnvironmentPlugin(EnvironmentInterface):
         if (Path.home() / ".local" / "pipx" / "venvs") in parents:
             return False
 
-        from platformdirs import user_data_dir
+        from platformdirs import user_data_dir  # noqa: PLC0415
 
         # https://github.com/ofek/pyapp/blob/v0.13.0/src/app.rs#L27
         if Path(user_data_dir("pyapp", appauthor=False)) in parents:
@@ -448,7 +448,7 @@ class UVVirtualEnvironmentPlugin(EnvironmentInterface):
 
     @cached_property
     def _python_constraint(self) -> SpecifierSet:
-        from packaging.specifiers import SpecifierSet
+        from packaging.specifiers import SpecifierSet  # noqa: PLC0415
 
         # Note that we do not support this field being dynamic because if we were to set up the
         # build environment to retrieve the field then we would be stuck because we need to use
