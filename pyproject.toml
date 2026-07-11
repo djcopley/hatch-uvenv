@@ -30,7 +30,7 @@ dependencies = [
   "hatch~=1.17",
   "packaging>=24.2",
   "platformdirs>=2.5.0",
-  "python-discovery>=1.1",
+  "python-discovery>=1.4.4",
 ]
 
 [project.entry-points.hatch]
