@@ -18,7 +18,7 @@ jobs:
         with:
           # hatch-vcs derives the version from git history
           fetch-depth: 0
-      - uses: actions/setup-python@v6
+      - uses: actions/setup-python@v7
         with:
           python-version: ${{ matrix.python-version }}
       - uses: astral-sh/setup-uv@v7
