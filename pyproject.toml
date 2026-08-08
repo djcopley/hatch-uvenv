@@ -28,9 +28,9 @@ classifiers = [
 # declare them explicitly (lower bounds match hatch's own requirements).
 dependencies = [
   "hatch~=1.17",
-  "packaging>=24.2",
-  "platformdirs>=2.5.0",
-  "python-discovery>=1.1",
+  "packaging>=26.3",
+  "platformdirs>=4.11.0",
+  "python-discovery>=1.5.1",
 ]
 
 [project.entry-points.hatch]
